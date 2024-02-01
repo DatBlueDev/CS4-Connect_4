@@ -31,7 +31,7 @@ public class MDAA{
             n = reader.nextInt();
             dropTokens(n);
             System.out.println("");
-            //checkWin wincondition
+            checkWinCondition();
             turnNumber+=1;
         }
 
@@ -83,14 +83,25 @@ public class MDAA{
     } 
 
     public static int checkWinCondition(){
-        scanPos[0] = {((savePos[0] - 3) < 0? 0:(savePos[0] - 3)), savePos[1]};//first point scan vertical
-        scanPos[1] = {((savePos[0] + 3) > 5? 5:(savePos[0] + 3)), savePos[1]};//second point scan vertical
-        scanPos[2] = {savePos[0], ((savePos[1] - 3) < 0? 0:(savePos[1] - 3))};//first point scan horizontal
-        scanPos[3] = {savePos[0], ((savePos[1] + 3) > 6? 6:(savePos[1] + 3))};//second point scan horizontal
-        scanPos[4] = {((savePos[0] - 3) < 0? 0:(savePos[0] - 3)), ((savePos[1] - 3) < 0? 0:(savePos[1] - 3))};//first point scan diagonal negative slope
-        scanPos[5] = {((savePos[0] + 3) > 5? 5:(savePos[0] + 3)), ((savePos[1] + 3) > 6? 6:(savePos[1] + 3))};//second point scan diagonal negative slope
-        scanPos[6] = {((savePos[0] + 3) > 5? 5:(savePos[0] + 3)), ((savePos[1] - 3) < 0? 0:(savePos[1] - 3))};//first point scan diagonal positive slope
-        scanPos[7] = {((savePos[0] - 3) < 0? 0:(savePos[0] - 3)), ((savePos[1] + 3) > 6? 6:(savePos[1] + 3))};//second point scan diagonal positive slope
+        scanPos[0][0] = savePos[0] - 3 < 0? 0:savePos[0] - 3;//first point scan vertical
+        scanPos[0][1] = savePos[1];
+        scanPos[1][0] = savePos[0] + 3 > 5? 5:savePos[0] + 3;//second point scan vertical
+        scanPos[1][1] = savePos[1];
+        scanPos[2][0] = savePos[0];//first point scan horizontal
+        scanPos[2][1] = savePos[1] - 3 < 0? 0:savePos[1] - 3;
+        scanPos[3][0] = savePos[0];//second point scan horizontal
+        scanPos[3][1] = savePos[1] + 3 > 6? 6:savePos[1] + 3;
+        scanPos[4][0] = savePos[0] - 3 < 0? 0:savePos[0] - 3;//first point scan diagonal negative slope
+        scanPos[4][1] = savePos[1] - 3 < 0? 0:savePos[1] - 3;
+        scanPos[5][0] = savePos[0] + 3 > 5? 5:savePos[0] + 3;//second point scan diagonal negative slope
+        scanPos[5][1] = savePos[1] + 3 > 6? 6:savePos[1] + 3;
+        scanPos[6][0] = savePos[0] + 3 > 5? 5:savePos[0] + 3;//first point scan diagonal positive slope
+        scanPos[6][1] = savePos[1] - 3 < 0? 0:savePos[1] - 3;
+        scanPos[7][0] = savePos[0] - 3 < 0? 0:savePos[0] - 3;//second point scan diagonal positive slope
+        scanPos[7][1] = savePos[1] + 3 > 6? 6:savePos[1] + 3;
+        for(int i = 0; i < 8; i++){
+            System.out.println(scanPos[i][0] + ", " + scanPos[i][1]);
+        }
         return 0;
     }
 }
