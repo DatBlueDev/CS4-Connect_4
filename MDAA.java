@@ -30,7 +30,9 @@ public class MDAA {
             dropTokens(n);
             System.out.println("");
             running = checkWinCondition.checkWin() == 0 ? true : false;
+            
             if (!running) {
+                displayBoard();
                 System.out.println("PLayer " + checkWinCondition.winPlayer + " won!");
             }
             turnNumber += 1;
