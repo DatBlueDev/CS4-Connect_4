@@ -64,27 +64,33 @@ public class checkWinCondition {
     }
 
     public static void winConditionScan() {
+        scanCounterV = 0;
+        scanCounterH = 0;
+        scanCounterND = 0;
+        scanCounterPD = 0;
         // vertical line scan
         if (!((scanPos[0][0]) > 2)) {
             for (int i = scanPos[0][0]; i <= scanPos[1][0]; i++) {
                 scanCounterV = MDAA.boardArray[i][scanPos[0][1]] == MDAA.currentPlayer ? scanCounterV + 1 : 0;
-
+                System.out.println(scanCounterV);
                 if (scanCounterV >= 4) {
                     winPlayer = MDAA.currentPlayer;
                     break;
                 }
             }
+            System.out.println();
         }
 
         // horizontal line scan
         for (int i = scanPos[2][1]; i <= scanPos[3][1]; i++) {
             scanCounterH = MDAA.boardArray[scanPos[2][0]][i] == MDAA.currentPlayer ? scanCounterH + 1 : 0;
-
+            System.out.println(scanCounterH);
             if (scanCounterH >= 4) {
                 winPlayer = MDAA.currentPlayer;
                 break;
             }
         }
+        System.out.println();
 
         // negative slope diagonal line scan
         if (scanPos[5][0] - scanPos[4][0] > 2) {
@@ -92,11 +98,13 @@ public class checkWinCondition {
                 scanCounterND = MDAA.boardArray[i][scanPos[4][1] + (i - scanPos[4][0])] == MDAA.currentPlayer
                         ? scanCounterND + 1
                         : 0;
+                System.out.println(scanCounterND);
                 if (scanCounterND >= 4) {
                     winPlayer = MDAA.currentPlayer;
                     break;
                 }
             }
+            System.out.println();
         }
 
         // positive slope diagonal line scan
@@ -111,6 +119,7 @@ public class checkWinCondition {
                     break;
                 }
             }
+            System.out.println();
         }
     }
 

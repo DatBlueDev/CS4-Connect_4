@@ -1,10 +1,8 @@
-// 0 = empty cell
-// 1 = red 
-// 2 = yellow
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-import java.util.*;
-
-public class MDAA {
+public class MDAA extends JFrame {
     static final int boardLength = 7;
     static final int boardHeight = 6;
     static int insertTokenIndex;
@@ -12,31 +10,67 @@ public class MDAA {
     static int currentPlayer = 1;
     static int[] savePos = new int[2];
     static boolean running = true;
+    static JButton buttonGrid[][] = new JButton[boardHeight][boardLength];
+    static int visualBoard[][] = new int[boardHeight][boardLength]; 
     static int boardArray[][] = { { 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0 } };
+    public static void mainFunction() {
 
-    public static void main(String[] args) {
-        Scanner reader = new Scanner(System.in);
-        int n;
-        while (running) {
-            currentPlayer = turnNumber % 2 == 1 ? 1 : 2;
-            System.out.println("It is player " + currentPlayer + "'s turn");
-            displayBoard();
-            n = reader.nextInt();
-            dropTokens(n);
-            System.out.println("");
-            running = checkWinCondition.checkWin() == 0 ? true : false;
-            
-            if (!running) {
-                displayBoard();
-                System.out.println("PLayer " + checkWinCondition.winPlayer + " won!");
+      JFrame frame = new JFrame("Wolfhound HQ");
+      JPanel boardPanel = new JPanel(new GridLayout(boardHeight, boardLength));
+      frame.setSize(800,600); // Set the size of the frame
+      frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+      for (int i = 0; i < boardHeight; i++) {
+        for (int j = 0; j < boardLength; j++) {
+            buttonGrid[i][j] = new JButton("");
+            buttonGrid[i][j].setBackground(Color.BLACK);  
+            buttonGrid[i][j].addActionListener(new ActionListener(){    
+              @Override
+              public void actionPerformed(ActionEvent e) {
+                  JButton clickedButton = (JButton) e.getSource();
+                  int col = 0;
+                  for (int j = 0; j < boardLength; j++) {
+                    for (int k = 0; k < boardHeight; k++){
+                        if (clickedButton == buttonGrid[k][j]) {
+                            col = j;
+                            break;
+                        }
+                      }
+                  }
+
+                  if (col != -1) {
+                    if (dropTokens(col)) {
+                        running = checkWinCondition.checkWin() == 0 ? true : false;
+                        if (!running) {
+                            resetBoard();
+                            displayBoard();
+                            JOptionPane.showMessageDialog(null, ("Player " + currentPlayer + " won!"),
+                                    "WINNER!!!", JOptionPane.INFORMATION_MESSAGE);
+                            System.exit(0);
+                            running = true; 
+
+                        }
+                        currentPlayer = (currentPlayer % 2) + 1; // Switch player
+                        displayBoard(); // Update visual representation after each turn
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Column Full! Choose another column.",
+                                "Invalid Move", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
             }
-            turnNumber += 1;
+        });
+
+            boardPanel.add(buttonGrid[i][j]);
         }
+        }
+
+      frame.add(boardPanel);
+      frame.setVisible(true);
 
     }
 
@@ -51,15 +85,26 @@ public class MDAA {
     }
 
     public static void displayBoard() {
-        for (int i = 0; i < boardHeight; i++) {
-            for (int j = 0; j < boardLength; j++) {
-                System.out.print(boardArray[i][j]);
+      for (int i = 0; i < boardHeight; i++) {
+        for (int j = 0; j < boardLength; j++) {
+            if (boardArray[i][j] == 0) {
+                visualBoard[i][j] = 0;  // Empty cell
+                buttonGrid[i][j].setText("");
+                buttonGrid[i][j].setBackground(Color.BLACK);
+            } else if (boardArray[i][j] == 1) {
+                visualBoard[i][j] = 1;  
+                buttonGrid[i][j].setText("Blood Moon");
+                buttonGrid[i][j].setBackground(Color.RED);
+            } else {
+                visualBoard[i][j] = 2; 
+                buttonGrid[i][j].setText("Blue Moon");
+                buttonGrid[i][j].setBackground(Color.BLUE);
             }
-            System.out.println("");
         }
     }
+    }
 
-    public static void dropTokens(int columnIndex) {
+    public static boolean dropTokens(int columnIndex) {
         boolean allowToPlace = true;
         for (int i = 0; i < boardHeight; i++) {
             if ((boardArray[i][columnIndex] != 0) && i > 0) {
@@ -79,6 +124,6 @@ public class MDAA {
             savePos[0] = insertTokenIndex;
             savePos[1] = columnIndex;
         }
-
+        return allowToPlace; 
     }
 }
