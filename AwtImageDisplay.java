@@ -1,6 +1,5 @@
 import java.awt.*;
 import java.awt.event.*;
-import javax.swing.*;
 
 public class AwtImageDisplay extends Frame {
 
@@ -26,7 +25,7 @@ public class AwtImageDisplay extends Frame {
     }
   }
 
-  public static void getPlaceCoords(int coords[]){
+  public static void getPlaceCoords(int coords[]) {
     System.out.println("COORDS y,x " + coords[0] + " " + coords[1]);
   }
 
