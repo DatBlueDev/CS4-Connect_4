@@ -85,9 +85,9 @@ public class main extends JFrame {
 			if (secondLine != null) {
 				player2Tag.setText("Player 2: " + secondLine);
 			}
-			} catch (IOException e) {
-				System.err.println("Error reading file: " + e.getMessage());
-			}
+		} catch (IOException e) {
+			System.err.println("Error reading file: " + e.getMessage());
+		}
 		play.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
 		try {
