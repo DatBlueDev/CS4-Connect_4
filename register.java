@@ -74,7 +74,7 @@ public class register {
 		newPlayer.setBackground(Color.WHITE);
 
 		JButton loginB = new JButton("Log-in");
-		loginB.setBounds(455, 435, 145, 28);
+		loginB.setBounds(300, 435, 300, 28);
 		loginB.setBorder(emptyBorder);
 		loginB.setBackground(Color.WHITE);
 
@@ -86,7 +86,6 @@ public class register {
 		frame.add(usereg);
 		frame.add(input);
 		frame.add(submit);
-		frame.add(newPlayer);
 		frame.add(loginB);
 		frame.add(random);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -175,5 +174,8 @@ public class register {
 			SwingUtilities.getWindowAncestor((Component) e.getSource()).dispose();
 
 		});
+	}
+	public static void main(String[] args){
+		mainFunction();
 	}
 }
