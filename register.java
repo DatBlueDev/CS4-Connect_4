@@ -1,7 +1,4 @@
-
 import javax.swing.border.Border;
-
-
 import java.awt.*;
 import javax.swing.*;
 import java.awt.Color;
@@ -13,7 +10,6 @@ import java.io.IOException;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.*;
-
 public class register {
     
 	static Font script;
@@ -78,7 +74,7 @@ public class register {
 		newPlayer.setBackground(Color.WHITE);
 
 		JButton loginB = new JButton("Log-in");
-		loginB.setBounds(455, 435, 145, 28);
+		loginB.setBounds(300, 435, 300, 28);
 		loginB.setBorder(emptyBorder);
 		loginB.setBackground(Color.WHITE);
 
@@ -90,7 +86,6 @@ public class register {
 		frame.add(usereg);
 		frame.add(input);
 		frame.add(submit);
-		frame.add(newPlayer);
 		frame.add(loginB);
 		frame.add(random);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -140,6 +135,24 @@ public class register {
 						try (FileWriter writer = new FileWriter(file, true)) {
 							writer.write(valueToAdd + System.lineSeparator()); // Add newline character
 						}
+						String subfolder = "users/";
+
+						// Create the subfolder if it doesn't exist
+						File folder = new File(subfolder);
+						if (!folder.exists()) {
+							folder.mkdirs(); // Create directories recursively
+						}
+
+						// Construct the full path with subfolder
+						String filePath = subfolder + valueToAdd + ".txt";
+
+						try (  // Use try-with-resources for automatic closing of resources
+							FileWriter writer = new FileWriter(filePath)) {
+							writer.write(valueToAdd + "\n");
+							writer.write("0\n");
+							writer.write("0\n");
+						}
+						System.out.println("File created: " + filePath);
 						System.out.println("Value '" + valueToAdd + "' added to users.txt");
 						JOptionPane.showMessageDialog(null, "Success! User Created", "Success", JOptionPane.INFORMATION_MESSAGE);
 
@@ -161,5 +174,8 @@ public class register {
 			SwingUtilities.getWindowAncestor((Component) e.getSource()).dispose();
 
 		});
+	}
+	public static void main(String[] args){
+		mainFunction();
 	}
 }

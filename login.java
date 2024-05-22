@@ -48,13 +48,13 @@ public class login {
 		userinput.setFont(users);
 
         JButton button = new JButton("Register now!");
-		button.setBounds(1255, 500, 180, 30);
+		button.setBounds(1255, 540, 180, 30);
 		Border emptyBorder = BorderFactory.createEmptyBorder();
 		button.setBorder(emptyBorder);
 		button.setBackground(Color.white);
 
-        JButton submit = new JButton("Submit now");
-		submit.setBounds(1255, 540, 180, 30);
+        JButton submit = new JButton("Play now");
+		submit.setBounds(1255, 500, 180, 30);
 		submit.setBorder(emptyBorder);
 		submit.setBackground(Color.white);
 
@@ -101,7 +101,6 @@ public class login {
         frame.add(user2input);
         frame.add(button);
         frame.add(submit);
-		frame.add(backToMain);
 		backToMain.addActionListener(e -> {
 			main mainFrame = new main();
 			main.mainFunction();
@@ -143,20 +142,30 @@ public class login {
 						}
 					}
 				}
-				if (count == 2){
-					bw.write(user1String + System.lineSeparator());
-					bw.write(user2String + System.lineSeparator());
+				if (!user1String.equals(user2String)){
+					if (count == 2){
+						bw.write(user1String + System.lineSeparator());
+						bw.write(user2String + System.lineSeparator());
 
-					// Close the BufferedWriter
-					bw.close();
+						// Close the BufferedWriter
+						bw.close();
 
-					System.out.println("Successfully wrote to " + "session.txt");
-				    JOptionPane.showMessageDialog(null,"Users successfully logged in as players 1 and 2.", "Information", JOptionPane.INFORMATION_MESSAGE);
+						System.out.println("Successfully wrote to " + "session.txt");
+						JOptionPane.showMessageDialog(null,"Users successfully logged in as players 1 and 2.", "Information", JOptionPane.INFORMATION_MESSAGE);
+						MDAA secondFrame = new MDAA();
+						secondFrame.mainFunction();
+						SwingUtilities.getWindowAncestor((Component) e.getSource()).dispose();
 
+					}
+					else{
+						System.out.println("User/s Not Registered!!");
+						JOptionPane.showMessageDialog(null, "User not registered! Please Register.", "Information", JOptionPane.INFORMATION_MESSAGE);
+
+					}
 				}
 				else{
-					System.out.println("User/s Not Registered!!");
-				    JOptionPane.showMessageDialog(null, "User not registered! Please Register.", "Information", JOptionPane.INFORMATION_MESSAGE);
+					System.out.println("You can't have the same user logged in as both players.");
+					JOptionPane.showMessageDialog(null,"You can't have the same user logged in as both players.", "Information", JOptionPane.INFORMATION_MESSAGE);
 
 				}
 

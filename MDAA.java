@@ -1,7 +1,23 @@
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
 
+import javax.swing.border.Border;
+
+
+import java.awt.*;
+import javax.swing.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.io.File;
+import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import java.util.*;
 public class MDAA extends JFrame {
     static final int boardLength = 7;
     static final int boardHeight = 6;
@@ -63,8 +79,92 @@ public class MDAA extends JFrame {
                                 if (!running) {
                                     resetBoard();
                                     displayBoard();
-                                    JOptionPane.showMessageDialog(null, ("Player " + currentPlayer + " won!"),
-                                            "WINNER!!!", JOptionPane.INFORMATION_MESSAGE);
+                                    int playerWon = 0;
+                                    try (BufferedReader reader = new BufferedReader(new FileReader("session.txt"))) {
+                                        String firstLine = reader.readLine();
+                                        String secondLine = reader.readLine();
+                                        String winnerName  = "";
+                                        String loserName =  "";
+                                        switch(currentPlayer){
+                                            case 1:
+                                                JOptionPane.showMessageDialog(null, ("Player " + firstLine + " (P1) won!"), "WINNER!!!", JOptionPane.INFORMATION_MESSAGE);
+                                                winnerName = firstLine;
+                                                loserName = secondLine;
+                                                break;
+                                            case 2:
+                                                JOptionPane.showMessageDialog(null, ("Player " + secondLine + " (P2) won!"), "WINNER!!!", JOptionPane.INFORMATION_MESSAGE);
+                                                winnerName = secondLine;
+                                                loserName = firstLine;
+                                                break;
+                                        }
+                                        String filename = winnerName + ".txt";
+                                        File fileWin = new File("users/", filename);
+
+                                        if (!fileWin.exists() || !fileWin.canRead()) {
+                                            System.out.println("Error: File not found or cannot be read.");
+                                        }
+                                        else{
+                                            
+                                        
+                                            BufferedReader readerWin = new BufferedReader(new FileReader(fileWin));
+                                            StringBuilder updatedContent = new StringBuilder();
+
+                                            String line;
+                                            int lineCount = 1;
+                                            while ((line = readerWin.readLine()) != null) {
+                                                if (lineCount == 2 || lineCount == 3) {
+                                                    int value = Integer.parseInt(line) + 1;
+                                                    updatedContent.append(value).append("\n");
+                                                } else {
+                                                    updatedContent.append(line).append("\n");
+                                                }
+                                                lineCount++;
+                                            }
+
+                                            readerWin.close();
+
+                                            // Write updated content back to the file
+                                            BufferedWriter writerWin = new BufferedWriter(new FileWriter(fileWin));
+                                            writerWin.write(updatedContent.toString());
+                                            writerWin.close();
+                                        }
+
+                                        filename = loserName + ".txt";
+                                        File fileLose = new File("users/", filename);
+
+                                        if (!fileLose.exists() || !fileLose.canRead()) {
+                                            System.out.println("Error: File not found or cannot be read.");
+                                        }
+                                        else{
+                                            
+                                        
+                                            BufferedReader readerLose = new BufferedReader(new FileReader(fileLose));
+                                           StringBuilder updatedContent = new StringBuilder();
+
+                                            String line;
+                                            int lineCount = 1;
+                                            while ((line = readerLose.readLine()) != null) {
+                                                if (lineCount == 3) {
+                                                    int value = Integer.parseInt(line) + 1;
+                                                    updatedContent.append(value).append("\n");
+                                                } else {
+                                                    updatedContent.append(line).append("\n");
+                                                }
+                                                lineCount++;
+                                            }
+
+                                            readerLose.close();
+
+                                            // Write updated content back to the file
+                                            BufferedWriter writerLose = new BufferedWriter(new FileWriter(fileLose));
+                                            writerLose.write(updatedContent.toString());
+                                            writerLose.close();
+                                        }
+                                    } 
+                                    catch (IOException err) {
+                                        System.err.println("Error reading file: " + err.getMessage());
+                                    }
+
                                     System.exit(0);
                                     running = true;
 
