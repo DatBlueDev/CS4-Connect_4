@@ -1,6 +1,19 @@
+
+import javax.swing.border.Border;
+
 import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.BufferedReader;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
+import java.util.*;
 
 public class MDAA extends JFrame {
     static final int boardLength = 7;
@@ -23,8 +36,8 @@ public class MDAA extends JFrame {
     static float outcome;
     static float playerMMR;
     static float opponentMMR;
-    static int playerHistory[] = new int[3];
-    static int opponentHistory[] = new int[3];
+    static int playerHistory;
+    static int opponentHistory;
     static float playerWR;
     static float opponentWR;
     static int playerNumGames;
@@ -63,8 +76,186 @@ public class MDAA extends JFrame {
                                 if (!running) {
                                     resetBoard();
                                     displayBoard();
-                                    JOptionPane.showMessageDialog(null, ("Player " + currentPlayer + " won!"),
-                                            "WINNER!!!", JOptionPane.INFORMATION_MESSAGE);
+                                    int playerWon = 0;
+                                    try (BufferedReader reader = new BufferedReader(new FileReader("session.txt"))) {
+                                        String firstLine = reader.readLine();
+                                        String secondLine = reader.readLine();
+                                        String winnerName = "";
+                                        String loserName = "";
+                                        switch (currentPlayer) {
+                                            case 1:
+                                                JOptionPane.showMessageDialog(null,
+                                                        ("Player " + firstLine + " (P1) won!"), "WINNER!!!",
+                                                        JOptionPane.INFORMATION_MESSAGE);
+                                                winnerName = firstLine;
+                                                loserName = secondLine;
+                                                outcome = 1f;
+                                                break;
+                                            case 2:
+                                                JOptionPane.showMessageDialog(null,
+                                                        ("Player " + secondLine + " (P2) won!"), "WINNER!!!",
+                                                        JOptionPane.INFORMATION_MESSAGE);
+                                                winnerName = secondLine;
+                                                loserName = firstLine;
+                                                outcome = 0f;
+                                                break;
+                                        }
+                                        String filename = winnerName + ".txt";
+                                        File fileWin = new File("users/", filename);
+
+                                        if (!fileWin.exists() || !fileWin.canRead()) {
+                                            System.out.println("Error: File not found or cannot be read.");
+                                        } else {
+
+                                            BufferedReader readerWin = new BufferedReader(new FileReader(fileWin));
+                                            StringBuilder updatedContent = new StringBuilder();
+
+                                            String line;
+                                            int lineCount = 1;
+                                            while ((line = readerWin.readLine()) != null) {
+                                                if (lineCount == 2 || lineCount == 3) {
+                                                    int value = Integer.parseInt(line) + 1;
+                                                    updatedContent.append(value).append("\n");
+                                                } else if (lineCount == 4) {
+                                                    switch (currentPlayer) {
+                                                        case 1:
+                                                            playerMMR = Float.parseFloat(line);
+                                                            System.out.println(playerMMR);
+                                                            updatedContent.append(line).append("\n");
+                                                            break;
+                                                        case 2:
+                                                            opponentMMR = Float.parseFloat(line);
+                                                            System.out.println(opponentMMR);
+                                                            updatedContent.append(line).append("\n");
+                                                            break;
+                                                    }
+                                                } else {
+                                                    updatedContent.append(line).append("\n");
+                                                }
+                                                lineCount++;
+                                            }
+
+                                            readerWin.close();
+
+                                            // Write updated content back to the file
+                                            BufferedWriter writerWin = new BufferedWriter(new FileWriter(fileWin));
+                                            writerWin.write(updatedContent.toString());
+                                            writerWin.close();
+                                        }
+
+                                        filename = loserName + ".txt";
+                                        File fileLose = new File("users/", filename);
+
+                                        if (!fileLose.exists() || !fileLose.canRead()) {
+                                            System.out.println("Error: File not found or cannot be read.");
+                                        } else {
+
+                                            BufferedReader readerLose = new BufferedReader(new FileReader(fileLose));
+                                            StringBuilder updatedContent = new StringBuilder();
+
+                                            String line;
+                                            int lineCount = 1;
+                                            while ((line = readerLose.readLine()) != null) {
+                                                if (lineCount == 3) {
+                                                    int value = Integer.parseInt(line) + 1;
+                                                    updatedContent.append(value).append("\n");
+                                                } else if (lineCount == 4) {
+                                                    switch (currentPlayer) {
+                                                        case 2:
+                                                            playerMMR = Float.parseFloat(line);
+                                                            System.out.println(playerMMR);
+                                                            updatedContent.append(line).append("\n");
+                                                            break;
+                                                        case 1:
+                                                            opponentMMR = Float.parseFloat(line);
+                                                            System.out.println(opponentMMR);
+                                                            updatedContent.append(line).append("\n");
+                                                            break;
+                                                    }
+                                                } else {
+                                                    updatedContent.append(line).append("\n");
+                                                }
+                                                lineCount++;
+                                            }
+
+                                            readerLose.close();
+
+                                            // Write updated content back to the file
+                                            BufferedWriter writerLose = new BufferedWriter(new FileWriter(fileLose));
+                                            writerLose.write(updatedContent.toString());
+                                            writerLose.close();
+                                        }
+
+                                        System.out.println("hello");
+                                        playerStats.calculateMMR();
+
+                                        if (!fileWin.exists() || !fileWin.canRead()) {
+                                            System.out.println("Error: File not found or cannot be read.");
+                                        } else {
+
+                                            BufferedReader readerWin2 = new BufferedReader(new FileReader(fileWin));
+                                            StringBuilder updatedContent = new StringBuilder();
+                                            String line;
+                                            int lineCount = 1;
+                                            while ((line = readerWin2.readLine()) != null) {
+                                                if (lineCount == 4) {
+                                                    switch (currentPlayer) {
+                                                        case 1:
+                                                            updatedContent.append(playerMMR).append("\n");
+                                                            break;
+                                                        case 2:
+                                                            updatedContent.append(opponentMMR).append("\n");
+                                                            break;
+                                                    }
+                                                } else {
+                                                    updatedContent.append(line).append("\n");
+                                                }
+                                                lineCount++;
+                                            }
+
+                                            readerWin2.close();
+
+                                            BufferedWriter writerWin2 = new BufferedWriter(new FileWriter(fileWin));
+                                            writerWin2.write(updatedContent.toString());
+                                            writerWin2.close();
+                                        }
+
+                                        if (!fileLose.exists() || !fileLose.canRead()) {
+                                            System.out.println("Error: File not found or cannot be read.");
+                                        } else {
+
+                                            BufferedReader readerLose2 = new BufferedReader(new FileReader(fileLose));
+                                            StringBuilder updatedContent = new StringBuilder();
+
+                                            String line;
+                                            int lineCount = 1;
+                                            while ((line = readerLose2.readLine()) != null) {
+                                                if (lineCount == 4) {
+                                                    switch (currentPlayer) {
+                                                        case 2:
+                                                            updatedContent.append(playerMMR).append("\n");
+                                                            break;
+                                                        case 1:
+                                                            updatedContent.append(opponentMMR).append("\n");
+                                                            break;
+                                                    }
+                                                } else {
+                                                    updatedContent.append(line).append("\n");
+                                                }
+                                                lineCount++;
+                                            }
+
+                                            readerLose2.close();
+
+                                            // Write updated content back to the file
+                                            BufferedWriter writerLose2 = new BufferedWriter(new FileWriter(fileLose));
+                                            writerLose2.write(updatedContent.toString());
+                                            writerLose2.close();
+                                        }
+                                    } catch (IOException err) {
+                                        System.err.println("Error reading file: " + err.getMessage());
+                                    }
+
                                     System.exit(0);
                                     running = true;
 

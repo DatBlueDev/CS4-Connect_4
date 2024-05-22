@@ -1,7 +1,4 @@
-
 import javax.swing.border.Border;
-
-
 import java.awt.*;
 import javax.swing.*;
 import java.awt.Color;
@@ -15,26 +12,28 @@ import java.io.FileWriter;
 import java.util.*;
 
 public class register {
-    
+
 	static Font script;
+
 	public static void mainFunction() {
-        
-		try{
+
+		try {
 			script = Font.createFont(Font.TRUETYPE_FONT, new File("VerifiedScript-RpjRE.ttf")).deriveFont(120f);
 			GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 			ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File("VerifiedScript-RpjRE.ttf")));
-		} catch(IOException | FontFormatException e){
+		} catch (IOException | FontFormatException e) {
 
 		}
-		// JPanel = a GUI component that functions as a container to hold other components
+		// JPanel = a GUI component that functions as a container to hold other
+		// components
 		ImageIcon icon = new ImageIcon("Right.gif");
 		ImageIcon claw = new ImageIcon("Claw.png");
-        
+
 		JLabel label = new JLabel();
 		JLabel clawz = new JLabel();
 
 		clawz.setIcon(claw);
-		clawz.setBounds(0,0, 500, 500);
+		clawz.setBounds(0, 0, 500, 500);
 
 		label.setIcon(icon);
 		label.setVerticalAlignment(JLabel.TOP);
@@ -46,12 +45,12 @@ public class register {
 
 		JPanel greenPanel = new JPanel();
 		greenPanel.setLayout(new FlowLayout());
-        greenPanel.setBounds(1200,0,291,680);
+		greenPanel.setBounds(1200, 0, 291, 680);
 
 		JPanel bluePanel = new JPanel();
 		bluePanel.setLayout(new FlowLayout());
-        bluePanel.setBounds(0,5,1200,680);
-		
+		bluePanel.setBounds(0, 5, 1200, 680);
+
 		Font user = new Font("Courier", Font.BOLD, 20);
 
 		JLabel registername = new JLabel();
@@ -78,7 +77,7 @@ public class register {
 		newPlayer.setBackground(Color.WHITE);
 
 		JButton loginB = new JButton("Log-in");
-		loginB.setBounds(455, 435, 145, 28);
+		loginB.setBounds(300, 435, 300, 28);
 		loginB.setBorder(emptyBorder);
 		loginB.setBackground(Color.WHITE);
 
@@ -90,19 +89,18 @@ public class register {
 		frame.add(usereg);
 		frame.add(input);
 		frame.add(submit);
-		frame.add(newPlayer);
 		frame.add(loginB);
 		frame.add(random);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(null);
 		frame.setSize(1500, 680);
-		frame.setVisible(true);	
-        frame.setResizable(false);
-		
+		frame.setVisible(true);
+		frame.setResizable(false);
+
 		greenPanel.add(label);
 		frame.add(greenPanel);
 		frame.add(bluePanel);
-		
+
 		newPlayer.addActionListener(e -> {
 			main mainFrame = new main();
 			mainFrame.mainFunction();
@@ -111,12 +109,12 @@ public class register {
 		});
 		submit.addActionListener(e -> {
 			if (input.getText().length() >= 3 && input.getText().length() <= 16) {
-			
+
 				try {
 					File file = new File("users.txt");
 					if (!file.exists()) {
 						file.createNewFile();
-					}	
+					}
 					String valueToAdd = input.getText().toUpperCase();
 					// Check for existing users
 					boolean foundValue = false;
@@ -127,7 +125,8 @@ public class register {
 								if (line.equals(valueToAdd)) {
 									foundValue = true;
 									System.out.println("User Already Exists! User: " + valueToAdd);
-    								JOptionPane.showMessageDialog(null, "User Already Exists.", "Information", JOptionPane.INFORMATION_MESSAGE);
+									JOptionPane.showMessageDialog(null, "User Already Exists.", "Information",
+											JOptionPane.INFORMATION_MESSAGE);
 
 									break;
 								}
@@ -140,18 +139,36 @@ public class register {
 						try (FileWriter writer = new FileWriter(file, true)) {
 							writer.write(valueToAdd + System.lineSeparator()); // Add newline character
 						}
+						String subfolder = "users/";
+
+						// Create the subfolder if it doesn't exist
+						File folder = new File(subfolder);
+						if (!folder.exists()) {
+							folder.mkdirs(); // Create directories recursively
+						}
+
+						// Construct the full path with subfolder
+						String filePath = subfolder + valueToAdd + ".txt";
+
+						try ( // Use try-with-resources for automatic closing of resources
+								FileWriter writer = new FileWriter(filePath)) {
+							writer.write(valueToAdd + "\n");
+							writer.write("0\n");
+							writer.write("0\n");
+							writer.write("1000\n");
+						}
+						System.out.println("File created: " + filePath);
 						System.out.println("Value '" + valueToAdd + "' added to users.txt");
-						JOptionPane.showMessageDialog(null, "Success! User Created", "Success", JOptionPane.INFORMATION_MESSAGE);
+						JOptionPane.showMessageDialog(null, "Success! User Created", "Success",
+								JOptionPane.INFORMATION_MESSAGE);
 
 					}
-				}
-				catch(IOException er){
+				} catch (IOException er) {
 
 				}
-			} 
-			else
-			{
-    			JOptionPane.showMessageDialog(null, "Invalid Username length.", "Information", JOptionPane.INFORMATION_MESSAGE);
+			} else {
+				JOptionPane.showMessageDialog(null, "Invalid Username length.", "Information",
+						JOptionPane.INFORMATION_MESSAGE);
 
 			}
 		});
@@ -161,5 +178,9 @@ public class register {
 			SwingUtilities.getWindowAncestor((Component) e.getSource()).dispose();
 
 		});
+	}
+
+	public static void main(String[] args) {
+		mainFunction();
 	}
 }
